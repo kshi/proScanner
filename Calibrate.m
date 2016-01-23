@@ -2,13 +2,10 @@
 calib_skip = 20;
 calib_iters = 30;
 for n=1:calib_skip
-    frame = getdata(vid);
-    wallFrame = getdata(wallcam);
+    frame = getdata(vid);    
     flushdata(vid)
-    flushdata(wallcam)
 end
 flushdata(vid)
-flushdata(wallcam)
 background = zeros(size(frame));
 for n=1:calib_iters
     frame = getdata(vid);

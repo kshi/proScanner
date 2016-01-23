@@ -86,7 +86,8 @@ colors = reshape(colors,[height*(frames-step),3])/255;
 figure(4)
 %plot3(zs(:),xs(:),-ys(:),'.')
 %axis equal
-pts = pcshow([zs(:),-xs(:),-ys(:)],colors,'markersize',50);
+points = [zs(:),-xs(:),-ys(:)];
+pts = pcshow(points,colors,'markersize',50);
 xlabel('x')
 ylabel('y')
 zlabel('z')

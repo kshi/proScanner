@@ -21,10 +21,11 @@ if (manual_correct)
     title('Press QE to translate in depth, WASD to translate in the plane, and JKRIUO to rotate. Press Z to accept alignment.');
     w = waitforbuttonpress;
     manualRot = eye(3);
+    [center,~] = sphereFit(q);    
     while true
         key = fig.CurrentCharacter;
-        transScale = 0.001;
-        rotScale = 1;
+        transScale = 0.005;
+        rotScale = 3;
         trans = [0,0,0];
         rot = eye(3);
         switch key
@@ -58,7 +59,6 @@ if (manual_correct)
         TT = TT + trans';
         manualRot = rot * manualRot;
         warpPoints = bsxfun(@plus,p*TR',TT');
-        [center,~] = sphereFit(q);
         warpPoints = bsxfun(@plus,bsxfun(@minus,warpPoints,center)*manualRot',center);
         Points = [q; warpPoints];        
         ptcloud = pointCloud(Points,'Color',RGBColors);
@@ -74,6 +74,8 @@ if (manual_correct)
         w = waitforbuttonpress;
     end
     close;
+    TR = manualRot*TR;
+    TT = TT - manualRot*center' + center';
 end
 end
 

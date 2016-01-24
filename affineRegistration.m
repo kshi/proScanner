@@ -3,8 +3,8 @@ function [ Points,Colors ] = affineRegistration( q,p,qc,pc,manual_correct )
 if (nargin < 5)
     manual_correct = false;
 end
-addpath('./clickA3DPoint');
 addpath('./icp');
+addpath('./sphereFit');
 [TR,TT] = icp(q',p');
 Points = [q; bsxfun(@plus,p*TR',TT')];
 Colors = [qc; pc];
@@ -13,12 +13,16 @@ if (manual_correct)
     figure;
     ptcloud = pointCloud(Points,'Color',RGBColors);
     pcshow(ptcloud);
-    fig = gcf;
-    title('Press QE to translate in depth and WASD to translate in the plane. Press Z to accept alignment.');
+    fig = gcf;    
+    title('Press QE to translate in depth, WASD to translate in the plane, and JKRIUO to rotate. Press Z to accept alignment.');
     w = waitforbuttonpress;
+    manualRot = eye(3);
     while true
         key = fig.CurrentCharacter;
         transScale = 0.001;
+        rotScale = 1;
+        trans = [0,0,0];
+        rot = eye(3);
         switch key
             case 'q'
                 trans = [-transScale,0,0];
@@ -29,19 +33,33 @@ if (manual_correct)
             case 'd'
                 trans = [0,transScale,0];
             case 'w'
-                trans = [0,0,transScale];
-            case 's'
                 trans = [0,0,-transScale];
+            case 's'
+                trans = [0,0,transScale];
             case 'z'
                 break;
-            otherwise
-                trans = [0,0,0];
+            case 'u'
+                rot = rotx(rotScale);
+            case 'o'
+                rot = rotx(-rotScale);
+            case 'k'
+                rot = roty(-rotScale);
+            case 'i'
+                rot = roty(rotScale);
+            case 'j'
+                rot = rotz(-rotScale);
+            case 'l'
+                rot = rotz(rotScale);
         end
         TT = TT + trans';
-        Points = [q; bsxfun(@plus,p*TR',TT')];
+        manualRot = rot * manualRot;
+        warpPoints = bsxfun(@plus,p*TR',TT');
+        [center,~] = sphereFit(q);
+        warpPoints = bsxfun(@plus,bsxfun(@minus,warpPoints,center)*manualRot',center);
+        Points = [q; warpPoints];
         ptcloud = pointCloud(Points,'Color',RGBColors);
         pcshow(ptcloud);
-        title('Press QE to translate in depth and WASD to translate in the plane. Press Z to accept alignment.');    
+        title('Press QE to translate in depth, WASD to translate in the plane, and JKRIUO to rotate. Press Z to accept alignment.');    
         drawnow;
         w = waitforbuttonpress;
     end

@@ -6,5 +6,6 @@ end
 [p2,c2] = processPointCloud(p2,c2);
 [Points,Colors] = affineRegistration(p1,p2,c1,c2,manual_correct);
 ptcloud = triangleInterpolate(Points,Colors);
+figure;
 pcshow(ptcloud);
 end

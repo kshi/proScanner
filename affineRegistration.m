@@ -10,6 +10,7 @@ Points = [q; bsxfun(@plus,p*TR',TT')];
 Colors = [qc; pc];
 if (manual_correct)
     RGBColors = uint8(round(Colors*255));
+    figure;
     ptcloud = pointCloud(Points,'Color',RGBColors);
     pcshow(ptcloud);
     fig = gcf;

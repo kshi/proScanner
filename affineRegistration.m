@@ -13,7 +13,11 @@ if (manual_correct)
     figure;
     ptcloud = pointCloud(Points,'Color',RGBColors);
     pcshow(ptcloud);
-    fig = gcf;    
+    fig = gcf;
+    ax = gca;
+    CameraPosition = ax.CameraPosition;
+    CameraViewAngle = ax.CameraViewAngle;
+    CameraUpVector = ax.CameraUpVector;    
     title('Press QE to translate in depth, WASD to translate in the plane, and JKRIUO to rotate. Press Z to accept alignment.');
     w = waitforbuttonpress;
     manualRot = eye(3);
@@ -56,11 +60,17 @@ if (manual_correct)
         warpPoints = bsxfun(@plus,p*TR',TT');
         [center,~] = sphereFit(q);
         warpPoints = bsxfun(@plus,bsxfun(@minus,warpPoints,center)*manualRot',center);
-        Points = [q; warpPoints];
+        Points = [q; warpPoints];        
         ptcloud = pointCloud(Points,'Color',RGBColors);
+        CameraPosition = ax.CameraPosition;
+        CameraViewAngle = ax.CameraViewAngle;
+        CameraUpVector = ax.CameraUpVector;
         pcshow(ptcloud);
         title('Press QE to translate in depth, WASD to translate in the plane, and JKRIUO to rotate. Press Z to accept alignment.');    
         drawnow;
+        ax.CameraPosition = CameraPosition;
+        ax.CameraViewAngle = CameraViewAngle;
+        ax.CameraUpVector = CameraUpVector;
         w = waitforbuttonpress;
     end
     close;

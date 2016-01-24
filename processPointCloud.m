@@ -1,5 +1,5 @@
 function [ points_out,colors_out ] = processPointCloud( points_in,colors_in )
-
+% removes non-face points in the point cloud
 pz = points_in(:,1);
 px = points_in(:,2);
 py = points_in(:,3);

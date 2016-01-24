@@ -2,6 +2,7 @@ function [ Points,Colors ] = affineRegistration( q,p,qc,pc,manual_correct )
 % computes affine transformation mapping points in p to points in q
 if (nargin < 5)
     manual_correct = false;
+end
 addpath('./clickA3DPoint');
 addpath('./icp');
 [TR,TT] = icp(q',p');
@@ -27,9 +28,9 @@ if (manual_correct)
             case 'd'
                 trans = [0,transScale,0];
             case 'w'
-                trans = [0,transScale,0];
+                trans = [0,0,transScale];
             case 's'
-                trans = [0,-transScale,0];
+                trans = [0,0,-transScale];
             case 'z'
                 break;
             otherwise
@@ -43,7 +44,7 @@ if (manual_correct)
         drawnow;
         w = waitforbuttonpress;
     end
-    close all;
+    close;
 end
 end
 

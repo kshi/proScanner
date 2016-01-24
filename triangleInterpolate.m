@@ -1,3 +1,4 @@
+function [ptcloud] = triangleInterpolate(Points, Colors)
 Z = Points(:,1);
 X = Points(:,2);
 Y = Points(:,3);
@@ -11,4 +12,5 @@ reconPoints = [Points; interpolatedPoints];
 reconColors = [Colors; interpolatedColors];
 RGBColors = uint8(round(reconColors * 255));
 ptcloud = pointCloud(reconPoints,'Color',RGBColors);
-pcshow(ptcloud);
+%pcshow(ptcloud);
+end
